@@ -1,0 +1,361 @@
+import java.io.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
+public class KontoVerwalten {
+
+	public String inhaber;
+	private double stand;
+	public boolean gesperrt;
+ 
+	KontoVerwalten() { }
+ 
+	KontoVerwalten(String inhaber, double stand, boolean gesperrt) {
+		this.inhaber = inhaber;
+		this.stand = stand;
+		this.gesperrt = gesperrt;
+	}
+
+	public double abfragen() {
+		return stand;
+	};
+
+	public void leeren() {
+		stand = 0;
+	};
+
+	public void einzahlen(double betrag) {
+		stand += betrag;
+	};
+
+	public double abheben(double betrag) {
+		if (betrag<=stand) {
+			stand -= betrag;
+			return betrag; }
+		else {
+			return -1;
+		}
+	};
+}
+
+class KontoAnzeige extends JFrame {
+
+	KontoVerwalten konto;
+ 
+	JTextField feldInhaber, feldStand, feldGesperrt;
+ 
+	KontoAnzeige(KontoVerwalten konto) {
+
+		this.konto = konto;
+  
+		setLayout(new GridLayout(0, 1));
+
+		JLabel lab = new JLabel("Inhaber:");
+		lab.setFont(new Font("Arial",Font.BOLD,24));
+		add(lab);
+		feldInhaber = new JTextField();
+		feldInhaber.setFont(new Font("Arial",Font.BOLD,24));
+		add(feldInhaber);
+		lab = new JLabel("Stand:");
+		lab.setFont(new Font("Arial",Font.BOLD,24));
+		add(lab);
+		feldStand = new JTextField();
+		feldStand.setFont(new Font("Arial",Font.BOLD,24));
+		add(feldStand);
+		lab = new JLabel("Gesperrt:");
+		lab.setFont(new Font("Arial",Font.BOLD,24));
+		add(lab);
+		feldGesperrt = new JTextField();
+		feldGesperrt.setFont(new Font("Arial",Font.BOLD,24));
+		add(feldGesperrt);
+  
+		Listener lis = new Listener();
+  
+		JButton but = new JButton("Anzeigen");
+		
+		but.setFont(new Font("Arial",Font.BOLD,24));
+		but.addActionListener(lis);
+		add(but);
+		
+		but = new JButton("Übernehmen");
+		but.setFont(new Font("Arial",Font.BOLD,24));
+		but.addActionListener(lis);
+		add(but);
+		
+		but = new JButton("Laden");
+		but.setFont(new Font("Arial",Font.BOLD,24));
+		but.addActionListener(lis);
+		add(but);
+		
+		but.setFont(new Font("Arial",Font.BOLD,24));
+		but = new JButton("Speichern");
+		but.setFont(new Font("Arial",Font.BOLD,24));
+		but.addActionListener(lis);
+		add(but);
+		
+		but.setFont(new Font("Arial",Font.BOLD,24));
+		but = new JButton("Support");
+		but.setFont(new Font("Arial",Font.BOLD,24));
+		but.addActionListener(lis);
+		add(but);
+		
+		but = new JButton("Quit");
+		but.setFont(new Font("Arial",Font.BOLD,24));
+		but.addActionListener(lis);
+		add(but);
+		
+		setLocation(200,200);
+		pack();
+		setVisible(true);
+		setSize(350, 600);
+		setTitle("KontoVerwalten Version 1.1");
+		setResizable(false);
+		setBackground(Color.BLUE);
+	}
+ 
+	class Listener implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+
+			if (e.getActionCommand().equals("Anzeigen")) {
+				feldInhaber.setText(konto.inhaber);
+				feldStand.setText((new Double(konto.abfragen())).toString());
+				feldGesperrt.setText((new Boolean(konto.gesperrt)).toString());
+			}
+
+			if (e.getActionCommand().equals("Übernehmen")) {
+				konto.inhaber = feldInhaber.getText();
+				konto.leeren();
+				konto.einzahlen(Double.parseDouble(feldStand.getText()));
+				konto.gesperrt = Boolean.parseBoolean(feldGesperrt.getText());
+			}
+
+			if (e.getActionCommand().equals("Laden")) {
+				JFileChooser jfc = new JFileChooser();
+				int auswahl = jfc.showOpenDialog(null);
+				if (auswahl==JFileChooser.APPROVE_OPTION) {
+					liesKonto(jfc.getSelectedFile().getName());
+					feldInhaber.setText(konto.inhaber);
+					feldStand.setText((new Double(konto.abfragen())).toString());
+					feldGesperrt.setText((new Boolean(konto.gesperrt)).toString());
+				}
+			}
+
+			if (e.getActionCommand().equals("Speichern")) {
+				String dateiname = JOptionPane.showInputDialog("Dateiname:");
+				speichereKonto(dateiname);
+			}
+			
+			if (e.getActionCommand().equals("Support")) {
+				setIconImage(Toolkit.getDefaultToolkit().getImage("E:\\icons\\gjICOx3n_400x400.jpg"));
+				setTitle("Support");
+				setResizable(false);
+				setBounds(100, 100, 450, 300);
+				JPanel contentPane = new JPanel();
+				contentPane.setForeground(Color.WHITE);
+				contentPane.setBackground(Color.MAGENTA);
+				contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+				setContentPane(contentPane);
+				contentPane.setLayout(null);
+				
+				JLabel lblNewLabel = new JLabel("Java2Enterprise TEAM");
+				lblNewLabel.setFont(new Font("Arial", Font.BOLD, 16));
+				lblNewLabel.setBounds(130, 11, 189, 29);
+				contentPane.add(lblNewLabel);
+				
+				JLabel lblNewLabel_1 = new JLabel("Online :");
+				lblNewLabel_1.setBackground(Color.MAGENTA);
+				lblNewLabel_1.setForeground(Color.BLACK);
+				lblNewLabel_1.setFont(new Font("Arial", Font.PLAIN, 11));
+				lblNewLabel_1.setBounds(10, 51, 54, 14);
+				contentPane.add(lblNewLabel_1);
+				
+				JLabel lblNewLabel_2 = new JLabel("Facebook -> ");
+				lblNewLabel_2.setFont(new Font("Arial", Font.PLAIN, 11));
+				lblNewLabel_2.setBackground(Color.MAGENTA);
+				lblNewLabel_2.setForeground(Color.BLACK);
+				lblNewLabel_2.setBounds(83, 51, 94, 14);
+				contentPane.add(lblNewLabel_2);
+				
+				JLabel lblTwitter = new JLabel("Twitter -> ");
+				lblTwitter.setFont(new Font("Arial", Font.PLAIN, 11));
+				lblTwitter.setBackground(Color.MAGENTA);
+				lblTwitter.setForeground(Color.BLACK);
+				lblTwitter.setBounds(83, 72, 94, 14);
+				contentPane.add(lblTwitter);
+				
+				JLabel lblInstagram = new JLabel("Instagram -> ");
+				lblInstagram.setFont(new Font("Arial", Font.PLAIN, 11));
+				lblInstagram.setBackground(Color.MAGENTA);
+				lblInstagram.setForeground(Color.BLACK);
+				lblInstagram.setBounds(83, 91, 94, 14);
+				contentPane.add(lblInstagram);
+				
+				JLabel lblServiceLine = new JLabel("Service :");
+				lblServiceLine.setFont(new Font("Arial", Font.PLAIN, 11));
+				lblServiceLine.setBackground(Color.MAGENTA);
+				lblServiceLine.setForeground(Color.BLACK);
+				lblServiceLine.setBounds(10, 152, 67, 14);
+				contentPane.add(lblServiceLine);
+				
+				JLabel lblTelefon = new JLabel("Telefon ->");
+				lblTelefon.setFont(new Font("Arial", Font.PLAIN, 11));
+				lblTelefon.setBackground(Color.MAGENTA);
+				lblTelefon.setForeground(Color.BLACK);
+				lblTelefon.setBounds(83, 152, 94, 14);
+				contentPane.add(lblTelefon);
+				
+				JLabel label = new JLabel("EMail -> ");
+				label.setFont(new Font("Arial", Font.PLAIN, 11));
+				label.setBackground(Color.MAGENTA);
+				label.setForeground(Color.BLACK);
+				label.setBounds(83, 172, 94, 14);
+				contentPane.add(label);
+				
+				JLabel lblNewLabel_3 = new JLabel("Anschrift :");
+				lblNewLabel_3.setFont(new Font("Arial", Font.PLAIN, 11));
+				lblNewLabel_3.setBackground(Color.MAGENTA);
+				lblNewLabel_3.setForeground(Color.BLACK);
+				lblNewLabel_3.setBounds(10, 196, 67, 14);
+				contentPane.add(lblNewLabel_3);
+				
+				JLabel lblJavaenterpriseTeam = new JLabel("Java2Enterprise TEAM");
+				lblJavaenterpriseTeam.setFont(new Font("Arial", Font.PLAIN, 11));
+				lblJavaenterpriseTeam.setBackground(Color.MAGENTA);
+				lblJavaenterpriseTeam.setForeground(Color.BLACK);
+				lblJavaenterpriseTeam.setBounds(83, 196, 152, 14);
+				contentPane.add(lblJavaenterpriseTeam);
+				
+				JLabel lblMuhammetEsmer = new JLabel("Muhammet Esmer");
+				lblMuhammetEsmer.setFont(new Font("Arial", Font.PLAIN, 11));
+				lblMuhammetEsmer.setBackground(Color.MAGENTA);
+				lblMuhammetEsmer.setForeground(Color.BLACK);
+				lblMuhammetEsmer.setBounds(83, 212, 152, 14);
+				contentPane.add(lblMuhammetEsmer);
+				
+				JLabel lblBreitscheidstrae = new JLabel("Breitscheidstra\u00DFe 100");
+				lblBreitscheidstrae.setFont(new Font("Arial", Font.PLAIN, 11));
+				lblBreitscheidstrae.setBackground(Color.MAGENTA);
+				lblBreitscheidstrae.setForeground(Color.BLACK);
+				lblBreitscheidstrae.setBounds(83, 229, 152, 14);
+				contentPane.add(lblBreitscheidstrae);
+				
+				JLabel lblStuttgart = new JLabel("70176 Stuttgart");
+				lblStuttgart.setFont(new Font("Arial", Font.PLAIN, 11));
+				lblStuttgart.setBackground(Color.MAGENTA);
+				lblStuttgart.setForeground(Color.BLACK);
+				lblStuttgart.setBounds(83, 246, 152, 14);
+				contentPane.add(lblStuttgart);
+				
+				JLabel lblNewLabel_4 = new JLabel("https://facebook.com/developerjava2enterprise/");
+				lblNewLabel_4.setFont(new Font("Arial", Font.PLAIN, 11));
+				lblNewLabel_4.setBackground(Color.MAGENTA);
+				lblNewLabel_4.setForeground(Color.BLACK);
+				lblNewLabel_4.setBounds(187, 51, 247, 14);
+				contentPane.add(lblNewLabel_4);
+				
+				JLabel lblHttpstwittercomjedev = new JLabel("https://twitter.com/J2E_Dev");
+				lblHttpstwittercomjedev.setFont(new Font("Arial", Font.PLAIN, 11));
+				lblHttpstwittercomjedev.setBackground(Color.MAGENTA);
+				lblHttpstwittercomjedev.setForeground(Color.BLACK);
+				lblHttpstwittercomjedev.setBounds(187, 72, 247, 14);
+				contentPane.add(lblHttpstwittercomjedev);
+				
+				JLabel lblHttpsinstagramcomjavaenterprise = new JLabel("https://instagram.com/java2enterprise/");
+				lblHttpsinstagramcomjavaenterprise.setFont(new Font("Arial", Font.PLAIN, 11));
+				lblHttpsinstagramcomjavaenterprise.setBackground(Color.MAGENTA);
+				lblHttpsinstagramcomjavaenterprise.setForeground(Color.BLACK);
+				lblHttpsinstagramcomjavaenterprise.setBounds(187, 91, 247, 14);
+				contentPane.add(lblHttpsinstagramcomjavaenterprise);
+				
+				JLabel label_3 = new JLabel("+49 176 3685 3169");
+				label_3.setFont(new Font("Arial", Font.PLAIN, 11));
+				label_3.setBackground(Color.MAGENTA);
+				label_3.setForeground(Color.BLACK);
+				label_3.setBounds(187, 152, 247, 14);
+				contentPane.add(label_3);
+				
+				JLabel lblMuhammetesmergmailcom = new JLabel("muhammetesmer61@gmail.com");
+				lblMuhammetesmergmailcom.setFont(new Font("Arial", Font.PLAIN, 11));
+				lblMuhammetesmergmailcom.setBackground(Color.MAGENTA);
+				lblMuhammetesmergmailcom.setForeground(Color.BLACK);
+				lblMuhammetesmergmailcom.setBounds(187, 172, 247, 14);
+				contentPane.add(lblMuhammetesmergmailcom);
+				
+				JLabel lblTelegram = new JLabel("Telegram -> ");
+				lblTelegram.setFont(new Font("Arial", Font.PLAIN, 11));
+				lblTelegram.setBackground(Color.MAGENTA);
+				lblTelegram.setForeground(Color.BLACK);
+				lblTelegram.setBounds(83, 110, 94, 14);
+				contentPane.add(lblTelegram);
+				
+				JLabel lblHttpstmejavaenterprisesupport = new JLabel("https://t.me/java2enterprise4support");
+				lblHttpstmejavaenterprisesupport.setFont(new Font("Arial", Font.PLAIN, 11));
+				lblHttpstmejavaenterprisesupport.setBackground(Color.MAGENTA);
+				lblHttpstmejavaenterprisesupport.setForeground(Color.BLACK);
+				lblHttpstmejavaenterprisesupport.setBounds(187, 110, 247, 14);
+				contentPane.add(lblHttpstmejavaenterprisesupport);
+				
+				JLabel lblWebseite = new JLabel("Webseite -> ");
+				lblWebseite.setFont(new Font("Arial", Font.PLAIN, 11));
+				lblWebseite.setBackground(Color.MAGENTA);
+				lblWebseite.setForeground(Color.BLACK);
+				lblWebseite.setBounds(83, 127, 94, 14);
+				contentPane.add(lblWebseite);
+				
+				JLabel lblHttpswwwjavaenterpriseblogspotde = new JLabel("https://www.java2enterprise.blogspot.de/");
+				lblHttpswwwjavaenterpriseblogspotde.setFont(new Font("Arial", Font.PLAIN, 11));
+				lblHttpswwwjavaenterpriseblogspotde.setBackground(Color.MAGENTA);
+				lblHttpswwwjavaenterpriseblogspotde.setForeground(Color.BLACK);
+				lblHttpswwwjavaenterpriseblogspotde.setBounds(187, 127, 247, 14);
+				contentPane.add(lblHttpswwwjavaenterpriseblogspotde);
+				
+				JButton btnNewButton = new JButton("Zur\u00FCck");
+				btnNewButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						// Geht wieder zum Programm Zurück
+						KontoVerwalten meinKonto = new KontoVerwalten("Donald Duck",200.0,false);
+						new KontoAnzeige(meinKonto);
+					}
+				});
+				btnNewButton.setBounds(345, 242, 89, 23);
+				contentPane.add(btnNewButton);
+			}
+
+			if (e.getActionCommand().equals("Quit")) {
+				System.exit(0);
+			}
+		}
+	}
+ 
+	public void liesKonto(String dateiname) {
+		try {
+			FileReader frd = new FileReader(dateiname);
+			BufferedReader brd = new BufferedReader(frd);
+			konto.inhaber = brd.readLine();
+			konto.leeren();
+			konto.einzahlen(Double.parseDouble(brd.readLine()));
+			konto.gesperrt = Boolean.parseBoolean(brd.readLine());
+			frd.close();
+		} 
+		catch (Exception exc) {
+			JOptionPane.showMessageDialog(null,"Fehler beim Laden"); 
+		}
+	}
+
+	public void speichereKonto(String dateiname) {
+		try {
+			FileWriter fwri = new FileWriter(dateiname);
+			PrintWriter pwri = new PrintWriter(fwri);
+			pwri.println(konto.inhaber);
+			pwri.println(konto.abfragen());
+			pwri.println(konto.gesperrt);
+			fwri.close();
+		} 
+		catch (Exception exc) { 
+			JOptionPane.showMessageDialog(null,"Fehler beim Speichern"); 
+		}
+	}
+}
