@@ -1,0 +1,12 @@
+import java.io.IOException;
+
+public class KontoIOGrafisch {
+
+	 public static void main(String[] args) throws IOException, ClassNotFoundException {
+	 
+		 KontoVerwalten meinKonto = new KontoVerwalten("Donald Duck",200.0,false);
+	  
+		 new KontoAnzeige(meinKonto);
+		 
+	 }
+}
